@@ -1,0 +1,44 @@
+name: Build Java-Node JNI Addons
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Set up Java JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Install build tools
+      run: sudo apt-get update && sudo apt-get install -y build-essential python3
+
+    - name: Compile Java classes
+      run: mkdir -p bin && javac -d bin src/java/*.java
+
+    - name: Build Node.js addons
+      run: node-gyp configure build
+
+    - name: Verify build output
+      run: ls -l build/Release/
+
+    - name: Test Node.js module
+      run: node test/test.js
