@@ -18,12 +18,14 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 22
-
+        
+    - name: Install node-addon-api
+      run: npm install node-addon-api
+      
     - name: Install node-gyp
       run: npm install -g node-gyp
       
-    - name: Install node-addon-api
-      run: npm install node-addon-api
+ 
 
     - name: Set up Java JDK
       uses: actions/setup-java@v3
