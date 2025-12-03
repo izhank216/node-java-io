@@ -1,13 +1,12 @@
-name: Build Java-Node JNI Addons
+name: Build and Release Java-Node JNI Addons
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +20,9 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+
+    - name: Install node-gyp
+      run: npm install -g node-gyp
 
     - name: Set up Java JDK
       uses: actions/setup-java@v3
@@ -37,8 +39,24 @@ jobs:
     - name: Build Node.js addons
       run: node-gyp configure build
 
-    - name: Verify build output
-      run: ls -l build/Release/
+    - name: Package binaries
+      run: |
+        mkdir -p release
+        cp build/Release/java_io.node release/
+        cp build/Release/java_lang.node release/
 
-    - name: Test Node.js module
-      run: node test/test.js
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: "Automated build of java.io and java.lang Node.js JNI addons."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload binaries to release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
