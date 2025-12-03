@@ -19,9 +19,6 @@ jobs:
       with:
         node-version: 22
 
-    - name: Install dependencies
-      run: npm install
-
     - name: Install node-gyp
       run: npm install -g node-gyp
 
