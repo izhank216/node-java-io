@@ -5,6 +5,7 @@
       "sources": [ "src/cpp/java_io_addon.cpp" ],
       "include_dirs": [
         "<!(node -p \"require('node-addon-api').include\")",
+        "<!(node -p \"require('node-addon-api').include_dir\")",
         "/usr/lib/jvm/java-17-temurin/include",
         "/usr/lib/jvm/java-17-temurin/include/linux"
       ],
@@ -20,6 +21,7 @@
       "sources": [ "src/cpp/java_lang_addon.cpp" ],
       "include_dirs": [
         "<!(node -p \"require('node-addon-api').include\")",
+        "<!(node -p \"require('node-addon-api').include_dir\")",
         "/usr/lib/jvm/java-17-temurin/include",
         "/usr/lib/jvm/java-17-temurin/include/linux"
       ],
@@ -32,3 +34,4 @@
     }
   ]
 }
+
